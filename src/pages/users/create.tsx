@@ -8,6 +8,7 @@ import { Box,
     Button
    } from '@chakra-ui/react';
 
+import Link from 'next/link'
 import {Input} from '../../components/Form/Input';
 
 import { Header } from "../../components/Header";
@@ -30,13 +31,13 @@ return (
                flex="1"
                borderRadius={8}
                bg="gray.800"
-               p="8"
+               p={["6","8"]}
             >
                 <Heading size="lg" fontWeight="normal">Criar Usuário</Heading>
                 <Divider my="6" borderColor="gray.700" />
-                <VStack spacing="8">
+                <VStack spacing={["6","8"]}>
                     <SimpleGrid minChildWidth="240px"
-                      spacing="8"
+                      spacing={["6","8"]}
                       w="100%">
                           <Input name="name" label="Nome" />
                           <Input name="email" type="email" label="E-mail" />
@@ -55,8 +56,11 @@ return (
                         <HStack
                             spacing="4"
                         >
-                            <Button colorScheme="whiteAlpha">Cancelar</Button>
-                            <Button colorScheme="pink">Cancelar</Button>
+                             <Link href="/users" passHref>
+                                <Button as="a" colorScheme="whiteAlpha">Cancelar</Button>
+                             </Link>
+                            
+                            <Button colorScheme="pink">Salvar</Button>
                         </HStack>
                     </Flex>
             </Box>
