@@ -14,7 +14,8 @@ interface InputProps extends ChakraInputProps{
     return (
         <FormControl isInvalid={!!error}>
               { !!label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-              <ChakraInput name="email"
+              <ChakraInput 
+                    name={name}
                     id={name}
                     focusBorderColor="pink.500"
                     bgColor="gray.900"
