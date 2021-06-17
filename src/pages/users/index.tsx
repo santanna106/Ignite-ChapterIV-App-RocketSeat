@@ -11,20 +11,32 @@ import { Box,
          Checkbox,
          Tbody,
          Text, 
-         useBreakpointValue} from '@chakra-ui/react';
-import { RiAddLine, RiPencilLine } from 'react-icons/ri';
-
+         useBreakpointValue,
+         Spinner} from '@chakra-ui/react';
+import { RiAddLine, RiGalleryFill, RiPencilLine } from 'react-icons/ri';
 import Link from 'next/link';
-
 import { Header } from "../../components/Header";
 import { Pagination } from '../../components/Pagination';
 import { Sidebar } from "../../components/Sidebar";
+import { useEffect } from 'react';
+
+import { useUsers } from '../../services/hooks/useUsers';
 
 export default function UserList(){
+    const {data, isLoading, isFetching,error} = useUsers();
+    
+     
     const isWideVersion = useBreakpointValue({
         base:false,
         lg:true
     })
+
+    useEffect(() => {
+        fetch('http://localhost:3000/api/users')
+        .then(response => response.json())
+        .then(data => console.log(data))
+    },[])
+
     return (
         <Box>
             <Header />
@@ -52,6 +64,9 @@ export default function UserList(){
                             fontWeight="normal"
                          >
                              Usuários
+                             {!isLoading && isFetching &&
+                                <Spinner size="sm" color="gray.500" ml={4} />
+                             }
                          </Heading>
                          <Link href="users/create" passHref>
                             <Button
@@ -67,7 +82,19 @@ export default function UserList(){
 
                      </Flex>
 
-                    <Table 
+                    { isLoading ? (
+                        <Flex justify="center">
+                            <Spinner />
+                        </Flex>
+                        )
+                      : error ? (
+                        <Flex justify="center">
+                            <Text>Falha em obter os dados do usuário</Text>
+                        </Flex>
+                      ) :  (
+                          
+                        <>
+                             <Table 
                         colorScheme="whiteAlpha"
                     >
                         <Thead>
@@ -87,18 +114,19 @@ export default function UserList(){
                             </Tr>
                         </Thead>
                         <Tbody>
-                            <Tr>
+                            {data.map( user => (
+                                <Tr key={user.id}>
                                 <Td px={["4","4","6"]}>
                                     <Checkbox colorScheme="pink" />
                                 </Td>
                                 <Td>
                                     <Box>
-                                        <Text fontWeight="bold">Gabriel Andrade de Sant Anna</Text>
-                                        <Text fontSize="sm" color="gray.300">gabriel.santana@gmail.com</Text>
+                                        <Text fontWeight="bold">{user.name}</Text>
+                                        <Text fontSize="sm" color="gray.300">{user.email}</Text>
                                     </Box>
                                 </Td>
 
-                                {isWideVersion && <Td>04 de Abril, 2021</Td>}
+                                {isWideVersion && <Td>{user.createdAt}</Td>}
                                 <Td>
                                 { isWideVersion  && 
                                     (
@@ -116,9 +144,15 @@ export default function UserList(){
                                 
                                 </Td>
                             </Tr>
+                            ))}
                         </Tbody>
                     </Table>
                     <Pagination />
+                        </>
+                      
+
+                      ) }
+                   
                  </Box>
             </Flex>
         </Box>
